@@ -1,26 +1,77 @@
 import mongoose from 'mongoose';
 
-const bookingSchema = new mongoose.Schema(
-  {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    partner: { type: mongoose.Schema.Types.ObjectId, ref: 'Partner' },
-
-    startTime: Date,
-    endTime: Date,
-
-    location: String,
-    note: String,
-
-    totalPrice: Number,
-
-    status: {
-      type: String,
-      enum: ['pending', 'accepted', 'rejected', 'completed', 'cancelled'],
-      default: 'pending',
-    },
+const bookingSchema = new mongoose.Schema({
+  customer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
-  { timestamps: true }
-);
+  companion: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Companion',
+    required: true,
+  },
+  bookingTime: {
+    type: Date,
+    required: true,
+  },
+  duration: {
+    type: Number, // in minutes
+    required: true,
+  },
+  location: {
+    type: String,
+    maxlength: 255,
+  },
+  rentalVenue: {
+    type: String,
+    maxlength: 500,
+  },
+  serviceName: {
+    type: String,
+    maxlength: 120,
+  },
+  servicePricePerHour: {
+    type: mongoose.Schema.Types.Decimal128,
+  },
+  note: {
+    type: String,
+  },
+  holdAmount: {
+    type: mongoose.Schema.Types.Decimal128,
+    default: 0,
+  },
+  status: {
+    type: String,
+    enum: ['PENDING', 'ACCEPTED', 'REJECTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+    default: 'PENDING',
+  },
+  acceptedAt: Date,
+  startedAt: Date,
+  completedAt: Date,
+  checkInLatitude: Number,
+  checkInLongitude: Number,
+  checkOutLatitude: Number,
+  checkOutLongitude: Number,
+  liveLatitude: Number,
+  liveLongitude: Number,
+  liveLocationAt: Date,
+  liveLocationRole: {
+    type: String,
+    maxlength: 20,
+  },
+  sosTriggered: {
+    type: Boolean,
+    default: false,
+  },
+  sosNote: String,
+  companionRatingForUser: Number,
+  companionReviewForUser: String,
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 const Booking = mongoose.model('Booking', bookingSchema);
 

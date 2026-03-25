@@ -2,13 +2,25 @@ import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    partner: { type: mongoose.Schema.Types.ObjectId, ref: 'Partner' },
-
-    rating: Number,
-    comment: String,
+    booking: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Booking',
+      required: true,
+      unique: true, // tương ứng với @OneToOne
+    },
+    rating: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5,
+    },
+    comment: {
+      type: String,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: { createdAt: true, updatedAt: false }, // chỉ tạo createdAt giống LocalDateTime.now()
+  }
 );
 
 const Review = mongoose.model('Review', reviewSchema);
